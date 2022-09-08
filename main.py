@@ -24,10 +24,6 @@ for label,executor in exec_conf.items():
         if type(v) == str:
             exec_conf[label][k] = os.path.expanduser(v)
 
-
-# Job runs in directory /pw/jobs/job-number
-job_number = os.path.dirname(os.getcwd().replace('/pw/jobs/', ''))
-
 # PARSL APPS:
 @parsl_utils.parsl_wrappers.log_app
 @python_app(executors=['myexecutor_1'])
@@ -79,11 +75,17 @@ if __name__ == '__main__':
     # Add sandbox directory
     for exec_label, exec_conf_i in exec_conf.items():
         if 'RUN_DIR' in exec_conf_i:
-            exec_conf[exec_label]['RUN_DIR'] = os.path.join(exec_conf_i['RUN_DIR'], str(job_number))
+            exec_conf[exec_label]['RUN_DIR'] = os.path.join(exec_conf[exec_label]['RUN_DIR'], args['job_number'])
         else:
             base_dir = '/tmp'
-            exec_conf[exec_label]['RUN_DIR'] = os.path.join(base_dir, str(job_number))
-            
+            exec_conf[exec_label]['RUN_DIR'] = os.path.join(base_dir,  args['job_number'])
+
+    print(
+        'Executor configuration:',
+        json.dumps(exec_conf, indent = 4),
+        flush = True
+    )
+
     config = Config(
         executors = [
             HighThroughputExecutor(
