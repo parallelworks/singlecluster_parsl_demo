@@ -5,4 +5,5 @@ set -x
 rm -rf parsl_utils
 git clone https://github.com/parallelworks/parsl_utils.git parsl_utils
 cp parsl_utils/kill.sh .
-bash parsl_utils/main.sh $@
+cp parsl_utils/main.sh .
+bash main.sh $@
