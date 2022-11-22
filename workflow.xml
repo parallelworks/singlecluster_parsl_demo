@@ -1,5 +1,5 @@
 <tool id='alvaro_singlecluster_parsl_demo' name='alvaro_singlecluster_parsl_demo'>
-  <command interpreter='bash'>main.sh</command>
+  <command interpreter='bash'>parsl_wrapper.sh</command>
   <inputs>
     <param name='name' label='Enter name to greet' type='text' help='This hello world workflow will print the entered name' value='PW_USER' width='50%_none'>
     </param>
