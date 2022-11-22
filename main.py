@@ -15,8 +15,6 @@ import parsl_utils
 @python_app(executors=['myexecutor_1'])
 def hello_python_app_1(name = '', stdout='std.out', stderr = 'std.err'):
     import socket
-    import time
-    time.sleep(9999)
     if not name:
         name = 'python_app_1'
     return 'Hello ' + name + ' from ' + socket.gethostname()
