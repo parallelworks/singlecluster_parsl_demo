@@ -51,8 +51,11 @@ for exec_label, exec_conf_i in exec_conf.items():
         if exec_conf[exec_label]['PROVIDER_TYPE'] == "PBS":
             provider = PBSProProvider(
                 queue = exec_conf[exec_label]['QUEUE'],
+                scheduler_options = '#PBS -q {QUEUE}'.format(
+                    QUEUE = exec_conf[exec_label]['QUEUE']
+                ),
                 nodes_per_block = int(exec_conf[exec_label]['NODES_PER_BLOCK']),
-                cpus_per_node = exec_conf[exec_label]['CPUS_PER_NODE']+':mpiprocs=1',
+                cpus_per_node = exec_conf[exec_label]['CPUS_PER_NODE'],
                 min_blocks = int(exec_conf[exec_label]['MIN_BLOCKS']),
                 max_blocks = int(exec_conf[exec_label]['MAX_BLOCKS']),
                 walltime = exec_conf[exec_label]['WALLTIME'],
