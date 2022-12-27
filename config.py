@@ -44,51 +44,50 @@ for exec_label, exec_conf_i in exec_conf.items():
         run_dir = exec_conf[exec_label]['RUN_DIR']
     )
 
-    # Define provider:
+    # Define provider
+    # Default provider
+    provider = SlurmProvider(
+        partition = exec_conf[exec_label]['PARTITION'],
+        nodes_per_block = int(exec_conf[exec_label]['NODES_PER_BLOCK']),
+        cores_per_node = int(exec_conf[exec_label]['NTASKS_PER_NODE']),
+        min_blocks = int(exec_conf[exec_label]['MIN_BLOCKS']),
+        max_blocks = int(exec_conf[exec_label]['MAX_BLOCKS']),
+        walltime = exec_conf[exec_label]['WALLTIME'],
+        worker_init = worker_init,
+        channel = channel
+    )
+
     if "PROVIDER_TYPE" in exec_conf_i:
         if exec_conf[exec_label]['PROVIDER_TYPE'] == "PBS":
             provider = PBSProProvider(
                 queue = exec_conf[exec_label]['QUEUE'],
                 nodes_per_block = int(exec_conf[exec_label]['NODES_PER_BLOCK']),
-                cpus_per_node = exec_conf[exec_label]['CPUS_PER_NODE']+':mpiprocs=1'
+                cpus_per_node = exec_conf[exec_label]['CPUS_PER_NODE']+':mpiprocs=1',
                 min_blocks = int(exec_conf[exec_label]['MIN_BLOCKS']),
                 max_blocks = int(exec_conf[exec_label]['MAX_BLOCKS']),
                 walltime = exec_conf[exec_label]['WALLTIME'],
                 worker_init = worker_init,
                 channel = channel
             )
-        else:
-            provider = SlurmProvider(
-                partition = exec_conf[exec_label]['PARTITION'],
-                nodes_per_block = int(exec_conf[exec_label]['NODES_PER_BLOCK']),
-                cores_per_node = int(exec_conf[exec_label]['NTASKS_PER_NODE']),
-                min_blocks = int(exec_conf[exec_label]['MIN_BLOCKS']),
-                max_blocks = int(exec_conf[exec_label]['MAX_BLOCKS']),
-                walltime = exec_conf[exec_label]['WALLTIME'],
-                worker_init = worker_init,
-                channel = channel
-            )
-
-        executors.append(
-            HighThroughputExecutor(
-                worker_ports=((
-                    int(exec_conf[exec_label]['WORKER_PORT_1']), 
-                    int(exec_conf[exec_label]['WORKER_PORT_2'])
-                )),
-                label = exec_label,
-                worker_debug = True,             # Default False for shorter logs
-                cores_per_worker = float(exec_conf[exec_label]['CORES_PER_WORKER']),
-                worker_logdir_root = exec_conf[exec_label]['WORKER_LOGDIR_ROOT'],
-                address = exec_conf[exec_label]['ADDRESS'],
-                provider = exec_conf[exec_label]['PROVIDER']
-            )
-        )
     
-
+    executors.append(
+        HighThroughputExecutor(
+            worker_ports=((
+                int(exec_conf[exec_label]['WORKER_PORT_1']), 
+                int(exec_conf[exec_label]['WORKER_PORT_2'])
+            )),
+            label = exec_label,
+            worker_debug = True,             # Default False for shorter logs
+            cores_per_worker = float(exec_conf[exec_label]['CORES_PER_WORKER']),
+            worker_logdir_root = exec_conf[exec_label]['WORKER_LOGDIR_ROOT'],
+            address = exec_conf[exec_label]['ADDRESS'],
+            provider = provider
+        )
+    )
+    
 config = Config(
     executors = executors
 )
-
 # ,
 #    monitoring = MonitoringHub(
 #       hub_address = address_by_hostname(),
