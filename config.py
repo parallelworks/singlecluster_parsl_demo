@@ -46,17 +46,7 @@ for exec_label, exec_conf_i in exec_conf.items():
 
     # Define provider
     # Default provider
-    provider = SlurmProvider(
-        partition = exec_conf[exec_label]['PARTITION'],
-        nodes_per_block = int(exec_conf[exec_label]['NODES_PER_BLOCK']),
-        cores_per_node = int(exec_conf[exec_label]['NTASKS_PER_NODE']),
-        min_blocks = int(exec_conf[exec_label]['MIN_BLOCKS']),
-        max_blocks = int(exec_conf[exec_label]['MAX_BLOCKS']),
-        walltime = exec_conf[exec_label]['WALLTIME'],
-        worker_init = worker_init,
-        channel = channel
-    )
-
+    provider = None
     if "PROVIDER_TYPE" in exec_conf_i:
         if exec_conf[exec_label]['PROVIDER_TYPE'] == "PBS":
             provider = PBSProProvider(
@@ -69,6 +59,18 @@ for exec_label, exec_conf_i in exec_conf.items():
                 worker_init = worker_init,
                 channel = channel
             )
+
+    if provider == None:
+        SlurmProvider(
+            partition = exec_conf[exec_label]['PARTITION'],
+            nodes_per_block = int(exec_conf[exec_label]['NODES_PER_BLOCK']),
+            cores_per_node = int(exec_conf[exec_label]['NTASKS_PER_NODE']),
+            min_blocks = int(exec_conf[exec_label]['MIN_BLOCKS']),
+            max_blocks = int(exec_conf[exec_label]['MAX_BLOCKS']),
+            walltime = exec_conf[exec_label]['WALLTIME'],
+            worker_init = worker_init,
+            channel = channel
+        )
     
     executors.append(
         HighThroughputExecutor(
