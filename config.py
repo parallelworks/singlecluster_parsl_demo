@@ -7,6 +7,7 @@ from parsl.addresses import address_by_hostname
 import os
 import json
 
+
 # Need to name the job to be able to remove it with clean_resources.sh!
 job_number = os.getcwd().replace('/pw/jobs/', '')
 
@@ -38,7 +39,8 @@ for exec_label, exec_conf_i in exec_conf.items():
         )
     )
 
-    worker_init = 'source {conda_sh}; conda activate {conda_env}; cd {run_dir}'.format(
+    worker_init = 'bash {workdir}/pw/remote.sh; source {conda_sh}; conda activate {conda_env}; cd {run_dir}'.format(
+        workdir = exec_conf[exec_label]['WORKDIR'],
         conda_sh = os.path.join(exec_conf[exec_label]['CONDA_DIR'], 'etc/profile.d/conda.sh'),
         conda_env = exec_conf[exec_label]['CONDA_ENV'],
         run_dir = exec_conf[exec_label]['RUN_DIR']
