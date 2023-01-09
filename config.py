@@ -65,6 +65,13 @@ for exec_label, exec_conf_i in exec_conf.items():
                 channel = channel
             )
         elif exec_conf[exec_label]['PROVIDER_TYPE'] == "LOCAL":
+            # Need to overwrite the default worker_init since we don't want to run remote.sh in this case
+            worker_init = 'source {conda_sh}; conda activate {conda_env}; cd {run_dir}'.format(
+                conda_sh = os.path.join(exec_conf[exec_label]['CONDA_DIR'], 'etc/profile.d/conda.sh'),
+                conda_env = exec_conf[exec_label]['CONDA_ENV'],
+                run_dir = exec_conf[exec_label]['RUN_DIR']
+            )
+
             provider = LocalProvider(
                 worker_init = worker_init,
                 channel = channel
