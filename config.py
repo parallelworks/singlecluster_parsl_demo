@@ -64,6 +64,11 @@ for exec_label, exec_conf_i in exec_conf.items():
                 worker_init = worker_init,
                 channel = channel
             )
+        elif exec_conf[exec_label]['PROVIDER_TYPE'] == "LOCAL":
+            provider = LocalProvider(
+                worker_init = worker_init,
+                channel = channel
+            )
 
     if provider == None:
         SlurmProvider(
