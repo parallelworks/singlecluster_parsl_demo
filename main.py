@@ -65,6 +65,7 @@ if __name__ == '__main__':
         inputs = [ 
             PWFile(
                 path = '{cwd}/hello_srun.in'.format(cwd = os.getcwd()),
+                netloc = 'usercontainer',
                 local_path = '{remote_dir}/hello_srun.in'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR']),
                 scheme = 'pwfile'
             )
@@ -72,6 +73,7 @@ if __name__ == '__main__':
         outputs = [
             PWFile(
                 path = '{cwd}/outputs/hello_srun-1.out'.format(cwd = os.getcwd()),
+                netloc = 'usercontainer',
                 local_path = '{remote_dir}/hello_srun-1.out'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR']),
                 scheme = 'pwfile'
             )
@@ -90,6 +92,7 @@ if __name__ == '__main__':
             inputs = [ 
                 PWFile(
                     path = 'demoworkflows/parsl_demo/hello.in',
+                    netloc = 'bucket',
                     local_path = '{remote_dir}/hello.in'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR']),
                     scheme = 'gs'
                 )
@@ -97,6 +100,7 @@ if __name__ == '__main__':
             outputs = [
                 PWFile(
                     path = 'demoworkflows/parsl_demo/hello.out',
+                    netloc = 'bucket',
                     local_path = '{remote_dir}/hello.out'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR']),
                     scheme = 'gs'
                 )
