@@ -29,6 +29,7 @@ def hello_bash_app_1(run_dir, inputs = [], outputs = [], stdout='std.out', stder
     return '''
         cd {run_dir}
         cat {hello_in} > {hello_out}
+        date >> {hello_out}
         echo $SLURM_JOB_NODELIST >> {hello_out}
     '''.format(
         run_dir = run_dir,
