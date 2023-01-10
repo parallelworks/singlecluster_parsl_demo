@@ -4,6 +4,7 @@
     <param name='name' label='Enter name to greet' type='text' help='This hello world workflow will print the entered name' value='PW_USER' width='50%_none'>
     </param>
     <param name="test_gsutil" type="boolean" truevalue="Yes" falsevalue="No" checked="False" label="Test gsutil data provider?" help='If yes is selected make sure you have credentials to run gsutil' width="25%_none" optional='true' float="right">
+    </param>
   </inputs>
   <outputs>
   </outputs>
