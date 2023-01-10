@@ -9,6 +9,8 @@ from parsl.data_provider.rsync import RSyncStaging
 import os
 import json
 
+import parsl_utils
+
 
 # Need to name the job to be able to remove it with clean_resources.sh!
 job_number = os.getcwd().replace('/pw/jobs/', '')
@@ -103,7 +105,7 @@ for exec_label, exec_conf_i in exec_conf.items():
             worker_logdir_root = exec_conf[exec_label]['WORKER_LOGDIR_ROOT'],
             address = exec_conf[exec_label]['ADDRESS'],
             provider = provider,
-            storage_access=[RSyncStaging('usercontainer')]
+            storage_access=[parsl_utils.staging.RSyncStaging('usercontainer')]
         )
     )
     
