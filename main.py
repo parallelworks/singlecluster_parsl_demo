@@ -10,6 +10,8 @@ from parsl.data_provider.files import File
 
 import parsl_utils
 from parsl_utils.config import config,exec_conf
+from parsl_utils.data_provider import PWFile
+
 
 
 # PARSL APPS:
@@ -62,17 +64,17 @@ if __name__ == '__main__':
     fut_1 = hello_bash_app_1(
         run_dir = exec_conf['myexecutor_1']['RUN_DIR'],
         inputs = [ 
-            parsl_utils.staging.PWFile(
+            PWFile(
                 path = '{cwd}/hello_srun.in'.format(cwd = os.getcwd()),
                 local_path = '{remote_dir}/hello_srun.in'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR']),
-                scheme = 'file'
+                scheme = 'pwfile'
             )
         ],
         outputs = [
-            parsl_utils.staging.PWFile(
+            PWFile(
                 path = '{cwd}/hello_srun-1.out'.format(cwd = os.getcwd()),
                 local_path = '{remote_dir}/hello_srun-1.out'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR']),
-                scheme = 'file'
+                scheme = 'pwfile'
             )
         ],
         stdout = os.path.join(exec_conf['myexecutor_1']['RUN_DIR'], 'std.out'),
