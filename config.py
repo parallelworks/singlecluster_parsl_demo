@@ -43,12 +43,23 @@ for exec_label, exec_conf_i in exec_conf.items():
         )
     )
 
-    worker_init = 'bash {workdir}/pw/remote.sh; source {conda_sh}; conda activate {conda_env}; cd {run_dir}'.format(
+    # Define worker init:
+    # - export PYTHONPATH={run_dir} is needed to use custom staging providers
+    worker_init = 'export PYTHONPATH={run_dir}; bash {workdir}/pw/remote.sh; source {conda_sh}; conda activate {conda_env}; cd {run_dir}'.format(
         workdir = exec_conf[exec_label]['WORKDIR'],
         conda_sh = os.path.join(exec_conf[exec_label]['CONDA_DIR'], 'etc/profile.d/conda.sh'),
         conda_env = exec_conf[exec_label]['CONDA_ENV'],
         run_dir = exec_conf[exec_label]['RUN_DIR']
     )
+
+    if "PROVIDER_TYPE" in exec_conf_i:
+        if exec_conf[exec_label]['PROVIDER_TYPE'] == "LOCAL":
+            # Need to overwrite the default worker_init since we don't want to run remote.sh in this case
+            worker_init = 'export PYTHONPATH={run_dir}; source {conda_sh}; conda activate {conda_env}; cd {run_dir}'.format(
+                conda_sh = os.path.join(exec_conf[exec_label]['CONDA_DIR'], 'etc/profile.d/conda.sh'),
+                conda_env = exec_conf[exec_label]['CONDA_ENV'],
+                run_dir = exec_conf[exec_label]['RUN_DIR']
+            )
 
     # Define provider
     # Default provider
@@ -69,20 +80,13 @@ for exec_label, exec_conf_i in exec_conf.items():
                 channel = channel
             )
         elif exec_conf[exec_label]['PROVIDER_TYPE'] == "LOCAL":
-            # Need to overwrite the default worker_init since we don't want to run remote.sh in this case
-            worker_init = 'source {conda_sh}; conda activate {conda_env}; cd {run_dir}'.format(
-                conda_sh = os.path.join(exec_conf[exec_label]['CONDA_DIR'], 'etc/profile.d/conda.sh'),
-                conda_env = exec_conf[exec_label]['CONDA_ENV'],
-                run_dir = exec_conf[exec_label]['RUN_DIR']
-            )
-
             provider = LocalProvider(
                 worker_init = worker_init,
                 channel = channel
             )
 
     if provider == None:
-        SlurmProvider(
+        provider = SlurmProvider(
             partition = exec_conf[exec_label]['PARTITION'],
             nodes_per_block = int(exec_conf[exec_label]['NODES_PER_BLOCK']),
             cores_per_node = int(exec_conf[exec_label]['NTASKS_PER_NODE']),
