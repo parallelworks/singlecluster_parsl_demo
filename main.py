@@ -24,7 +24,7 @@ def hello_python_app_1(name = '', stdout='std.out', stderr = 'std.err'):
     return 'Hello ' + name + ' from ' + socket.gethostname()
 
 @parsl_utils.parsl_wrappers.log_app
-@bash_app(executors=['myexecutor_1'])
+@bash_app(fut, executors=['myexecutor_1'])
 def hello_bash_app_1(run_dir, inputs = [], outputs = [], stdout='std.out', stderr = 'std.err'):
     return '''
         cd {run_dir}
@@ -57,11 +57,10 @@ if __name__ == '__main__':
     print('\n\n\nHELLO PYTHON APP:', flush = True)
     fut_1 = hello_python_app_1(name = args['name'])
 
-    print(fut_1.result())
-
     print('\n\n\nHELLO BASH APP:', flush = True)
     print('\n\nmyexecutor_1:', flush = True)
     fut_2 = hello_bash_app_1(
+        fut_1,
         run_dir = exec_conf['myexecutor_1']['RUN_DIR'],
         inputs = [ 
             PWFile(
@@ -83,12 +82,11 @@ if __name__ == '__main__':
         stderr = os.path.join(exec_conf['myexecutor_1']['RUN_DIR'], 'std.err')
     )
 
-    print(fut_2.result())
-
     if args['test_gsutil'] == 'True':
         print('\n\n\nHELLO BASH APP WITH GSUTIL:', flush = True)
         print('\n\nmyexecutor_1:', flush = True)
         fut_3 = hello_bash_app_1(
+            fut_2,
             run_dir = exec_conf['myexecutor_1']['RUN_DIR'],
             inputs = [ 
                 PWFile(
@@ -108,7 +106,8 @@ if __name__ == '__main__':
             ],
             stdout = os.path.join(exec_conf['myexecutor_1']['RUN_DIR'], 'std-gs.out'),
             stderr = os.path.join(exec_conf['myexecutor_1']['RUN_DIR'], 'std-gs.err')
-    )
-
-    fut_3.result()
+        )
+        fut_3.result()
+    else:
+        fut_2.result()
 
