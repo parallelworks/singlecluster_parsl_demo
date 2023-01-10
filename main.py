@@ -8,9 +8,9 @@ from parsl.app.app import python_app, bash_app
 from parsl.data_provider.files import File
 
 
-from config import config,exec_conf
-
 import parsl_utils
+from parsl_utils.config import config,exec_conf
+
 
 # PARSL APPS:
 @parsl_utils.parsl_wrappers.log_app
