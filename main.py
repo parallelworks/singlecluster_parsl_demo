@@ -60,8 +60,7 @@ if __name__ == '__main__':
 
     print('\n\n\nHELLO BASH APP:', flush = True)
     print('\n\nmyexecutor_1:', flush = True)
-    input_file = File('hello_srun.in')
-    fut_1 = hello_bash_app_1(
+    fut_2 = hello_bash_app_1(
         run_dir = exec_conf['myexecutor_1']['RUN_DIR'],
         inputs = [ 
             PWFile(
@@ -72,7 +71,7 @@ if __name__ == '__main__':
         ],
         outputs = [
             PWFile(
-                path = '{cwd}/hello_srun-1.out'.format(cwd = os.getcwd()),
+                path = '{cwd}/outputs/hello_srun-1.out'.format(cwd = os.getcwd()),
                 local_path = '{remote_dir}/hello_srun-1.out'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR']),
                 scheme = 'pwfile'
             )
@@ -81,4 +80,30 @@ if __name__ == '__main__':
         stderr = os.path.join(exec_conf['myexecutor_1']['RUN_DIR'], 'std.err')
     )
 
-    print(fut_1.result())
+    print(fut_2.result())
+
+    if args['test_gsutil'] == 'True':
+        print('\n\n\nHELLO BASH APP WITH GSUTIL:', flush = True)
+        print('\n\nmyexecutor_1:', flush = True)
+        fut_3 = hello_bash_app_1(
+            run_dir = exec_conf['myexecutor_1']['RUN_DIR'],
+            inputs = [ 
+                PWFile(
+                    path = 'demoworkflows/parsl_demo/hello.in',
+                    local_path = '{remote_dir}/hello.in'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR']),
+                    scheme = 'gs'
+                )
+            ],
+            outputs = [
+                PWFile(
+                    path = 'demoworkflows/parsl_demo/hello.out',
+                    local_path = '{remote_dir}/hello.out'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR']),
+                    scheme = 'gs'
+                )
+            ],
+            stdout = os.path.join(exec_conf['myexecutor_1']['RUN_DIR'], 'std-gs.out'),
+            stderr = os.path.join(exec_conf['myexecutor_1']['RUN_DIR'], 'std-gs.err')
+    )
+
+    fut_3.result()
+
