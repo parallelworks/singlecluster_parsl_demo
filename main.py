@@ -5,6 +5,8 @@ import argparse
 import parsl
 print(parsl.__version__, flush = True)
 from parsl.app.app import python_app, bash_app
+from parsl.data_provider.files import File
+
 
 from config import config,exec_conf
 
@@ -20,17 +22,16 @@ def hello_python_app_1(name = '', stdout='std.out', stderr = 'std.err'):
     return 'Hello ' + name + ' from ' + socket.gethostname()
 
 @parsl_utils.parsl_wrappers.log_app
-@parsl_utils.parsl_wrappers.stage_app(exec_conf['myexecutor_1']['HOST_USER'] + '@' + exec_conf['myexecutor_1']['HOST_IP'])
 @bash_app(executors=['myexecutor_1'])
-def hello_bash_app_1(run_dir, inputs_dict = {}, outputs_dict = {}, stdout='std.out', stderr = 'std.err'):
+def hello_bash_app_1(run_dir, inputs = [], outputs = [], stdout='std.out', stderr = 'std.err'):
     return '''
         cd {run_dir}
         cat {hello_in} > {hello_out}
         echo $SLURM_JOB_NODELIST >> {hello_out}
     '''.format(
         run_dir = run_dir,
-        hello_in = inputs_dict["test-in-file"]["worker_path"],
-        hello_out = outputs_dict["test-out-file"]["worker_path"],
+        hello_in = inputs[0].local_path,
+        hello_out = outputs[0].local_path,
     )
 
 def read_args():
@@ -57,22 +58,23 @@ if __name__ == '__main__':
 
     print('\n\n\nHELLO BASH APP:', flush = True)
     print('\n\nmyexecutor_1:', flush = True)
+    input_file = File('hello_srun.in')
     fut_1 = hello_bash_app_1(
         run_dir = exec_conf['myexecutor_1']['RUN_DIR'],
-        inputs_dict = {
-            "test-in-file": {
-                "type": "file",
-                "global_path": "pw://{cwd}/hello_srun.in",
-                "worker_path": "{remote_dir}/hello_srun.in".format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR'])
-            }
-        },
-        outputs_dict = {
-            "test-out-file": {
-                "type": "file",
-                "global_path": "pw://{cwd}/hello_srun-1.out",
-                "worker_path": "{remote_dir}/hello_srun-1.out".format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR'])
-            }
-        },
+        inputs = [ 
+            parsl_utils.staging.PWFile(
+                path = '{cwd}/hello_srun.in'.format(cwd = os.getcwd()),
+                local_path = '{remote_dir}/hello_srun.in'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR']),
+                scheme = 'file'
+            )
+        ],
+        outputs = [
+            parsl_utils.staging.PWFile(
+                path = '{cwd}/hello_srun-1.out'.format(cwd = os.getcwd()),
+                local_path = '{remote_dir}/hello_srun-1.out'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR']),
+                scheme = 'file'
+            )
+        ],
         stdout = os.path.join(exec_conf['myexecutor_1']['RUN_DIR'], 'std.out'),
         stderr = os.path.join(exec_conf['myexecutor_1']['RUN_DIR'], 'std.err')
     )

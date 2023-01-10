@@ -4,6 +4,8 @@ from parsl.providers import LocalProvider, SlurmProvider, PBSProProvider
 from parsl.executors import HighThroughputExecutor
 #from parsl.monitoring.monitoring import MonitoringHub
 from parsl.addresses import address_by_hostname
+from parsl.data_provider.rsync import RSyncStaging
+
 import os
 import json
 
@@ -100,7 +102,8 @@ for exec_label, exec_conf_i in exec_conf.items():
             cores_per_worker = float(exec_conf[exec_label]['CORES_PER_WORKER']),
             worker_logdir_root = exec_conf[exec_label]['WORKER_LOGDIR_ROOT'],
             address = exec_conf[exec_label]['ADDRESS'],
-            provider = provider
+            provider = provider,
+            storage_access=[RSyncStaging('usercontainer')]
         )
     )
     
