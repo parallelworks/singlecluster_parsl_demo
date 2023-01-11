@@ -13,7 +13,6 @@ from parsl_utils.config import config,exec_conf
 from parsl_utils.data_provider import PWFile
 
 
-
 # PARSL APPS:
 @parsl_utils.parsl_wrappers.log_app
 @python_app(executors=['myexecutor_1'])
@@ -25,7 +24,7 @@ def hello_python_app_1(name = '', stdout='std.out', stderr = 'std.err'):
 
 @parsl_utils.parsl_wrappers.log_app
 @bash_app(executors=['myexecutor_1'])
-def hello_bash_app_1(fut, run_dir, inputs = [], outputs = [], stdout='std.out', stderr = 'std.err'):
+def hello_bash_app_1(fut,run_dir, inputs = [], outputs = [], stdout='std.out', stderr = 'std.err'):
     return '''
         cd {run_dir}
         cat {hello_in} > {hello_out}
@@ -57,6 +56,7 @@ if __name__ == '__main__':
     print('\n\n\nHELLO PYTHON APP:', flush = True)
     fut_1 = hello_python_app_1(name = args['name'])
 
+
     print('\n\n\nHELLO BASH APP:', flush = True)
     print('\n\nmyexecutor_1:', flush = True)
     fut_2 = hello_bash_app_1(
@@ -64,18 +64,14 @@ if __name__ == '__main__':
         run_dir = exec_conf['myexecutor_1']['RUN_DIR'],
         inputs = [ 
             PWFile(
-                path = '{cwd}/hello_srun.in'.format(cwd = os.getcwd()),
-                netloc = 'usercontainer',
-                local_path = '{remote_dir}/hello_srun.in'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR']),
-                scheme = 'file'
+                url = 'file://usercontainer/{cwd}/hello_srun.in'.format(cwd = os.getcwd()),
+                local_path = '{remote_dir}/inputs/hello_srun.in'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR'])
             )
         ],
         outputs = [
             PWFile(
-                path = '{cwd}/outputs/hello_srun-1.out'.format(cwd = os.getcwd()),
-                netloc = 'usercontainer',
-                local_path = '{remote_dir}/hello_srun-1.out'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR']),
-                scheme = 'file'
+                url = 'file://usercontainer/{cwd}/outputs/hello_srun-1.out'.format(cwd = os.getcwd()),
+                local_path = '{remote_dir}/hello_srun-1.out'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR'])
             )
         ],
         stdout = os.path.join(exec_conf['myexecutor_1']['RUN_DIR'], 'std.out'),
@@ -90,18 +86,14 @@ if __name__ == '__main__':
             run_dir = exec_conf['myexecutor_1']['RUN_DIR'],
             inputs = [ 
                 PWFile(
-                    path = 'demoworkflows/parsl_demo/hello.in',
-                    netloc = 'bucket',
-                    local_path = '{remote_dir}/hello.in'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR']),
-                    scheme = 'gs'
+                    url = 'gs://bucket/demoworkflows/parsl_demo/hello.in',
+                    local_path = '{remote_dir}/hello.in'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR'])
                 )
             ],
             outputs = [
                 PWFile(
-                    path = 'demoworkflows/parsl_demo/hello.out',
-                    netloc = 'bucket',
-                    local_path = '{remote_dir}/hello.out'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR']),
-                    scheme = 'gs'
+                    url = 'gs://bucket/demoworkflows/parsl_demo/hello.out',
+                    local_path = '{remote_dir}/hello.out'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR'])
                 )
             ],
             stdout = os.path.join(exec_conf['myexecutor_1']['RUN_DIR'], 'std-gs.out'),
