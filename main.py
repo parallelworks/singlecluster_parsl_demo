@@ -6,7 +6,7 @@ import parsl
 print(parsl.__version__, flush = True)
 
 import parsl_utils
-from parsl_utils.config import config,exec_conf
+from parsl_utils.config import config, exec_conf
 from parsl_utils.data_provider import PWFile
 
 from workflow_apps import *
