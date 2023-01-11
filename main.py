@@ -24,8 +24,8 @@ def hello_python_app_1(name = '', stdout='std.out', stderr = 'std.err'):
     return 'Hello ' + name + ' from ' + socket.gethostname()
 
 @parsl_utils.parsl_wrappers.log_app
-@bash_app(fut, executors=['myexecutor_1'])
-def hello_bash_app_1(run_dir, inputs = [], outputs = [], stdout='std.out', stderr = 'std.err'):
+@bash_app(executors=['myexecutor_1'])
+def hello_bash_app_1(fut, run_dir, inputs = [], outputs = [], stdout='std.out', stderr = 'std.err'):
     return '''
         cd {run_dir}
         cat {hello_in} > {hello_out}
