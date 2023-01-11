@@ -3,9 +3,13 @@ import parsl_utils
 
 
 # PARSL APPS:
+
 @parsl_utils.parsl_wrappers.log_app
 @python_app(executors=['myexecutor_1'])
-def hello_python_app_1(name = '', stdout='std.out', stderr = 'std.err'):
+def hello_python_app(name = '', stdout='std.out', stderr = 'std.err'):
+    """
+    Sample python app that runs in myexecutor_1 (defined in the Parsl config)
+    """
     import socket
     if not name:
         name = 'python_app_1'
@@ -13,7 +17,11 @@ def hello_python_app_1(name = '', stdout='std.out', stderr = 'std.err'):
 
 @parsl_utils.parsl_wrappers.log_app
 @bash_app(executors=['myexecutor_1'])
-def hello_bash_app_1(fut,run_dir, inputs = [], outputs = [], stdout='std.out', stderr = 'std.err'):
+def hello_bash_app(fut, run_dir, inputs = [], outputs = [], stdout='std.out', stderr = 'std.err'):
+    """
+    Sample bash app that runs in myexecutor_1 (defined in the Parsl config). The argument fut is a future
+    from a different app and is only used to create a dependency (run this app after the other app).
+    """
     return '''
         cd {run_dir}
         cat {hello_in} > {hello_out}
@@ -24,3 +32,12 @@ def hello_bash_app_1(fut,run_dir, inputs = [], outputs = [], stdout='std.out', s
         hello_in = inputs[0].local_path,
         hello_out = outputs[0].local_path,
     )
+
+
+def hello_executor(user):
+    """
+    This is a function that is wrapped in the main.py script to run on all the executors defined in 
+    the Parsl config.
+    """
+    import socket
+    return 'Hello {} from {}'.format(user,socket.gethostname())
