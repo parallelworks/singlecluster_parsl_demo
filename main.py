@@ -41,7 +41,7 @@ if __name__ == '__main__':
             fut_1 = hello_python_app(name = args['name'])
             
             print('\n\nApp hello_bash_app', flush = True)
-            fut_2 = hello_bash_app_1(
+            fut_2 = hello_bash_app(
                 fut_1,
                 run_dir = exec_conf[exec_label]['RUN_DIR'],
                 inputs = [ 
@@ -90,4 +90,6 @@ if __name__ == '__main__':
         hello_executor_futs.append(
             python_app(hello_executor, executors=[exec_label]) (os.environ['PW_USER'])
         )
-
+    
+    for fut in hello_executor_futs:
+        print(fut.result())
