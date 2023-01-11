@@ -67,7 +67,7 @@ if __name__ == '__main__':
                 path = '{cwd}/hello_srun.in'.format(cwd = os.getcwd()),
                 netloc = 'usercontainer',
                 local_path = '{remote_dir}/hello_srun.in'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR']),
-                scheme = 'pwfile'
+                scheme = 'file'
             )
         ],
         outputs = [
@@ -75,7 +75,7 @@ if __name__ == '__main__':
                 path = '{cwd}/outputs/hello_srun-1.out'.format(cwd = os.getcwd()),
                 netloc = 'usercontainer',
                 local_path = '{remote_dir}/hello_srun-1.out'.format(remote_dir =  exec_conf['myexecutor_1']['RUN_DIR']),
-                scheme = 'pwfile'
+                scheme = 'file'
             )
         ],
         stdout = os.path.join(exec_conf['myexecutor_1']['RUN_DIR'], 'std.out'),
