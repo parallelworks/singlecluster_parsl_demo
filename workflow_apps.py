@@ -23,6 +23,7 @@ def hello_bash_app(fut, run_dir, inputs = [], outputs = [], stdout='std.out', st
     from a different app and is only used to create a dependency (run this app after the other app).
     """
     return '''
+    sleep 30
         cd {run_dir}
         cat {hello_in} > {hello_out}
         date >> {hello_out}
