@@ -68,13 +68,13 @@ if __name__ == '__main__':
                     run_dir = exec_conf[exec_label]['RUN_DIR'],
                     inputs = [ 
                         PWFile(
-                            url = 'gs://bucket/demoworkflows/parsl_demo/hello.in',
+                            url = 'gs://demoworkflows/parsl_demo/hello.in',
                             local_path = '{remote_dir}/hello.in'.format(remote_dir =  exec_conf[exec_label]['RUN_DIR'])
                         )
                     ],
                     outputs = [
                         PWFile(
-                            url = 'gs://bucket/demoworkflows/parsl_demo/hello.out',
+                            url = 'gs://demoworkflows/parsl_demo/hello.out',
                             local_path = '{remote_dir}/hello.out'.format(remote_dir =  exec_conf[exec_label]['RUN_DIR'])
                         )
                     ],
