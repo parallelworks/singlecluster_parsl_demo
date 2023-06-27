@@ -1,5 +1,5 @@
 <tool id='Matthew.Shaxted_interactive_session' name='Matthew.Shaxted_interactive_session'>
-  <command interpreter='bash'>parsl_wrapper.sh</command>
+  <command interpreter='bash'>main.sh</command>
   <cancel interpreter='bash'>kill.sh</cancel>
   <inputs>
     <param name='greeting' label='Greeting Message' type='text' value='Hello from ' help='Greeting message to return from each host' width='50%_none'></param>
