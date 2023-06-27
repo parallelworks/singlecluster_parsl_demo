@@ -1,4 +1,0 @@
-[submodule "parsl_utils"]
-	path = parsl_utils
-	url = https://github.com/parallelworks/parsl_utils.git
-	branch = main
