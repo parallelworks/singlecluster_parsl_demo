@@ -2,7 +2,7 @@
   <command interpreter='bash'>parsl_wrapper.sh</command>
   <cancel interpreter='bash'>kill.sh</cancel>
   <inputs>
-    <param name='greeting' label='Greeting Message' type='text' value='Hello from ' help='Greeting message to return from each host' width='50%_none'></param>
+    <param name='greeting' label='Greeting Message' type='text' value='Hello' help='Greeting message to return from each host' width='50%_none'></param>
     <param name='pw_conda_yaml' label='PW Conda YAML Definition File' type='hidden' value='./requirements/pw_conda.yaml' width='50%_none'></param>
     <param name='pw_conda_dir' label='PW Conda Directory' type='hidden' value='/pw/.miniconda3c' width='50%_none'></param>
     <param name='pw_conda_env' label='PW Conda Environment Name' type='hidden' value='parsl-1.2' width='50%_none'></param>    
