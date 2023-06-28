@@ -5,7 +5,7 @@ from parsl.app.app import python_app
 print(parsl.__version__, flush = True)
 
 import parsl_utils
-from parsl_utils.config import config, resource_labels, inputs_dict
+from parsl_utils.config import config, resource_labels, form_inputs
 
 from workflow_apps import hello_executor
 
@@ -20,7 +20,7 @@ if __name__ == '__main__':
     for label in resource_labels:
         print(f'\nRunning job in executor {label}')
         hello_executor_futs.append(
-            python_app(hello_executor, executors=[label])(inputs_dict['greeting'])
+            python_app(hello_executor, executors=[label])(form_inputs['greeting'])
         )
     
     for li,label in enumerate(resource_labels):
