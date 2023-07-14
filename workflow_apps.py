@@ -9,4 +9,6 @@ def hello_executor(greeting):
     the Parsl config.
     """
     import socket
+    from time import sleep
+    sleep(10)
     return '{} from {}'.format(greeting, socket.gethostname())
