@@ -250,7 +250,6 @@
             show_if='PBS'
             optional='true'
         ></param>
-      </conditional>
     </section>
   </inputs>
   <outputs>
